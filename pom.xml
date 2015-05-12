@@ -6,7 +6,7 @@
 
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.planificando</groupId>
-  <artifactId>prueba</artifactId>
+  <artifactId>demo-gwt-spring</artifactId>
   <packaging>war</packaging>
   <version>1.0</version>
   <name>GWT Maven Archetype</name>
@@ -81,9 +81,9 @@
         <!-- Plugin configuration. There are many available options, see 
           gwt-maven-plugin documentation at codehaus.org -->
         <configuration>
-          <runTarget>prueba.html</runTarget>
+          <runTarget>Demo.html</runTarget>
           <modules>
-            <module>org.planificando.prueba</module>
+            <module>org.planificando.Demo</module>
           </modules>
         </configuration>
       </plugin>
