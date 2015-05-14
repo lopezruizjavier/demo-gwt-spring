@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="org.planificando.server.dao">
+	<resultMap id="BaseResultMap" type="org.planificando.server.model.User">
+		<id column="cod_user" property="codUser" jdbcType="BIGINT" />
+
+		<result column="nick" property="nick" jdbcType="VARCHAR" />
+		<result column="pass" property="pass" jdbcType="VARCHAR" />
+		<result column="email" property="email" jdbcType="VARCHAR" />
+
+		<result column="banned" property="banned" jdbcType="BOOLEAN" />
+
+		<result column="registered" property="registered" jdbcType="TIMESTAMP" />
+
+		<result column="username" property="username" jdbcType="VARCHAR" />
+		<result column="surname" property="surname" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<select id="selectAll" resultMap="BaseResultMap">
+		SELECT * FROM "USER"
+	</select>
+
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+		DELETE FROM "USER"
+		WHERE cod_user = #{codUser, jdbcType=BIGINT}
+	</delete>
+
+	<insert id="insert" parameterType="org.planificando.server.model.User">
+		INSERT INTO "USER" (cod_user, nick, pass, email, banned, registered, username, surname)
+		VALUES (#{codUser, jdbcType=BIGINT},
+				#{nick, jdbcType=VARCHAR},
+				#{pass, jdbcType=VARCHAR},
+				#{email, jdbcType=VARCHAR},
+				#{banned, jdbcType=BOOLEAN},
+				#{registered, jdbcType=TIMESTAMP},
+				#{username, jdbcType=VARCHAR},
+				#{surname, jdbcType=VARCHAR})
+	</insert>
+
+	<update id="update" parameterType="org.planificando.server.model.User">
+		UPDATE "USER"
+		SET nick = #{nick, jdbcType=VARCHAR},
+			pass = #{pass, jdbcType=VARCHAR},
+			email = #{email, jdbcType=VARCHAR},
+			banned = #{banned, jdbcType=VARCHAR},
+			registered = #{registered, jdbcType=VARCHAR},
+			username = #{username, jdbcType=VARCHAR},
+			surname = #{surname, jdbcType=VARCHAR}
+		WHERE id_cliente = #{codUser,jdbcType=BIGINT}
+	</update>
+</mapper>

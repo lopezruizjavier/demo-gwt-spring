@@ -6,16 +6,32 @@
 	<artifactId>demo-gwt-spring</artifactId>
 	<packaging>war</packaging>
 	<version>1.0</version>
-	<name>GWT Maven Archetype</name>
+	<name>Demo GWT y Spring</name>
+
+	<prerequisites>
+		<maven>3</maven>
+	</prerequisites>
 
 	<properties>
-    <!-- Convenience property to set the GWT version -->
-		<gwtVersion>2.7.0</gwtVersion>
-
-    <!-- GWT needs at least java 1.6 -->
-		<maven.compiler.source>1.7</maven.compiler.source>
-		<maven.compiler.target>1.7</maven.compiler.target>
+		<java.version>1.7</java.version>
+		<maven.test.failure.ignore>false</maven.test.failure.ignore>
+		<maven.test.skip>true</maven.test.skip>
+		<mvn.eclipse.plugin.version>2.9</mvn.eclipse.plugin.version>
+		<mvn.war.plugin>2.6</mvn.war.plugin>
+		<mvn.compiler.plugin>3.2</mvn.compiler.plugin>
+		<gwt.version>2.7.0</gwt.version>
 		<smartGwt.version>5.0</smartGwt.version>
+
+		<jsp.version>2.2</jsp.version>
+		<jstl.version>1.2</jstl.version>
+		<servlet.version>2.5</servlet.version>
+
+		<spring-framework.version>4.1.6.RELEASE</spring-framework.version>
+
+		<logback.version>1.0.13</logback.version>
+		<slf4j.version>1.7.5</slf4j.version>
+
+		<webapp.dir>${project.build.directory}/${project.build.finalName}</webapp.dir>
 
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
@@ -25,7 +41,7 @@
 			<dependency>
 				<groupId>com.google.gwt</groupId>
 				<artifactId>gwt</artifactId>
-				<version>${gwtVersion}</version>
+				<version>${gwt.version}</version>
 				<type>pom</type>
 				<scope>import</scope>
 			</dependency>
@@ -33,6 +49,105 @@
 	</dependencyManagement>
 
 	<dependencies>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-webmvc</artifactId>
+			<version>${spring-framework.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-web</artifactId>
+			<version>${spring-framework.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-context</artifactId>
+			<version>${spring-framework.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-orm</artifactId>
+			<version>${spring-framework.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-jdbc</artifactId>
+			<version>${spring-framework.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.mybatis</groupId>
+			<artifactId>mybatis</artifactId>
+			<version>3.2.8</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.mybatis</groupId>
+			<artifactId>mybatis-spring</artifactId>
+			<version>1.2.2</version>
+		</dependency>
+
+		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>jstl</artifactId>
+			<version>${jstl.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>servlet-api</artifactId>
+			<version>${servlet.version}</version>
+			<scope>provided</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>javax.servlet.jsp</groupId>
+			<artifactId>jsp-api</artifactId>
+			<version>${jsp.version}</version>
+			<scope>provided</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-tx</artifactId>
+			<version>${spring-framework.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+			<version>${slf4j.version}</version>
+			<scope>compile</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>ch.qos.logback</groupId>
+			<artifactId>logback-classic</artifactId>
+			<version>${logback.version}</version>
+			<scope>runtime</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>com.googlecode.json-simple</groupId>
+			<artifactId>json-simple</artifactId>
+			<version>1.1.1</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.postgresql</groupId>
+			<artifactId>postgresql</artifactId>
+			<version>9.2-1004-jdbc4</version>
+		</dependency>
+
+		<dependency>
+			<groupId>commons-dbcp</groupId>
+			<artifactId>commons-dbcp</artifactId>
+			<version>1.4</version>
+		</dependency>
+
 		<dependency>
 			<groupId>com.smartgwt</groupId>
 			<artifactId>smartgwt</artifactId>
@@ -68,35 +183,78 @@
 	</dependencies>
 
 	<build>
-    <!-- Output classes directly into the webapp, so that IDEs and "mvn process-classes" update them in DevMode -->
 		<outputDirectory>${project.build.directory}/${project.build.finalName}/WEB-INF/classes</outputDirectory>
 
 		<plugins>
-
-      <!-- GWT Maven Plugin -->
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>gwt-maven-plugin</artifactId>
-				<version>2.7.0</version>
+				<version>${gwt.version}</version>
+
 				<executions>
 					<execution>
+						<configuration>
+							<module>org.planificando.Demo</module>
+							<extraJvmArgs>-Xms1024m -Xmx1024m -XX:PermSize=2048m -XX:MaxPermSize=2048m</extraJvmArgs>
+							<localWorkers>1</localWorkers>
+						</configuration>
 						<goals>
 							<goal>compile</goal>
-							<goal>test</goal>
-							<goal>generateAsync</goal>
 						</goals>
 					</execution>
 				</executions>
-        <!-- Plugin configuration. There are many available options, see 
-          gwt-maven-plugin documentation at codehaus.org -->
+
 				<configuration>
+					<compileReport>false</compileReport>
+					<extraJvmArgs>-Xms1024m -Xmx1024m -XX:PermSize=2048m -XX:MaxPermSize=2048m</extraJvmArgs>
+					<localWorkers>1</localWorkers>
 					<runTarget>Demo.html</runTarget>
-					<modules>
-						<module>org.planificando.Demo</module>
-					</modules>
+					<hostedWebapp>${webapp.dir}</hostedWebapp>
+				</configuration>
+			</plugin>
+
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-war-plugin</artifactId>
+				<version>${mvn.war.plugin}</version>
+				<executions>
+					<execution>
+						<phase>compile</phase>
+					</execution>
+				</executions>
+				<configuration>
+					<skipTests>true</skipTests>
+					<webapp.dir>${webapp.dir}</webapp.dir>
+				</configuration>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>${mvn.compiler.plugin}</version>
+				<configuration>
+					<skipTests>true</skipTests>
+					<showDeprecation>true</showDeprecation>
+					<showWarnings>true</showWarnings>
+					<encoding>utf-8</encoding>
+					<source>${java.version}</source>
+					<target>${java.version}</target>
+				</configuration>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-eclipse-plugin</artifactId>
+				<version>${mvn.eclipse.plugin.version}</version>
+				<configuration>
+					<downloadSources>true</downloadSources>
+					<downloadJavadocs>true</downloadJavadocs>
+					<sourceIncludes>
+						<sourceInclude>**/*.*</sourceInclude>
+					</sourceIncludes>
 				</configuration>
 			</plugin>
 		</plugins>
 	</build>
-
 </project>

@@ -1,25 +1,27 @@
 package org.planificando.client;
 
-import org.planificando.client.widgets.BarraHerramientas;
-import org.planificando.client.widgets.UsuariosGrid;
+import org.planificando.client.widgets.CRUDToolStrip;
+import org.planificando.client.widgets.UserGrid;
 
 import com.google.gwt.core.client.EntryPoint;
-import com.smartgwt.client.widgets.layout.HLayout;
+import com.smartgwt.client.widgets.layout.VLayout;
 
 public class Demo implements EntryPoint
 {
 	public void onModuleLoad()
 	{
-		HLayout hLayout = new HLayout();
+		VLayout hLayout = new VLayout();
 
-		UsuariosGrid usuariosGrid = new UsuariosGrid();
+		UserGrid usuariosGrid = new UserGrid();
 		
-		BarraHerramientas barraHerramientas = new BarraHerramientas(usuariosGrid);
+		CRUDToolStrip barraHerramientas = new CRUDToolStrip(usuariosGrid);
 
 		hLayout.addMember(barraHerramientas);
 		hLayout.addMember(usuariosGrid);
 		hLayout.setWidth100();
 		hLayout.setHeight100();
+		hLayout.setPadding(50);
+		hLayout.setMembersMargin(20);
 
 		hLayout.draw();
 	}
