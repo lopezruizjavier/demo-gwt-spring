@@ -36,7 +36,9 @@ public class UserDS extends JSONRestDataSource
 		email.setRequired(true);
 
 		registered.setCanEdit(false);
-
+		pass.setCanEdit(true);
+		nick.setCanEdit(true);
+		
 		setFetchDataURL(FETCH_URL);
 		setAddDataURL(SAVE_URL);
 		setRemoveDataURL(REMOVE_URL);
