@@ -18,5 +18,6 @@ public class UserGrid extends ListGrid
 		setSelectionType(SelectionStyle.SIMPLE);
 		setAutoSaveEdits(false);
 		setAutoFetchData(true);
+		setCanRemoveRecords(true);
 	}
 }

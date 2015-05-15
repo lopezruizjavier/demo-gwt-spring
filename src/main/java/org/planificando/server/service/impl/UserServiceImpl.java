@@ -1,16 +1,16 @@
 package org.planificando.server.service.impl;
 
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
 import org.planificando.server.dao.UserMapper;
 import org.planificando.server.model.User;
 import org.planificando.server.service.UserService;
-import org.planificando.server.utils.JsonBuilder;
+import org.planificando.server.utils.JSONGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,14 +21,11 @@ public class UserServiceImpl implements UserService
 	@Autowired
 	private UserMapper userMapper;
 
-	private JsonBuilder jsonBuilder = new JsonBuilder();
-
-	@SuppressWarnings({ "unchecked" })
 	@Override
 	@Transactional
 	public String saveUsers(String json)
 	{
-		String respuesta = "";
+		String response;
 
 		try
 		{
@@ -48,112 +45,84 @@ public class UserServiceImpl implements UserService
 			if (jsonObject.get("email") != null)
 				user.setEmail(jsonObject.get("email").toString());
 
-			user.setRegistered(new Date());
-			user.setBanned(false);
+			if (jsonObject.get("username") != null)
+				user.setUsername(jsonObject.get("username").toString());
+
+			if (jsonObject.get("surname") != null)
+				user.setSurname(jsonObject.get("surname").toString());
+
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+
+			if (jsonObject.get("registered") != null)
+				user.setRegistered(sdf.parse(jsonObject.get("registered").toString()));
+
+			if (jsonObject.get("banned") != null)
+				user.setBanned(Boolean.parseBoolean(jsonObject.get("banned").toString()));
 
 			if (user.getCodUser() == null)
-				userMapper.insert(user);
-			else
 			{
+				user.setRegistered(new Date());
+				user.setBanned(false);
+				userMapper.insert(user);
+			}
+			else
 				userMapper.update(user);
 
-				user = userMapper.selectByCodUser(user.getCodUser());
-			}
-
-			JSONObject response = new JSONObject();
-
-			jsonObject.put("codUser", user.getCodUser());
-
-			JSONArray jsonArray = new JSONArray();
-
-			jsonArray.add(jsonObject);
-
-			response.put("totalRows", 1);
-			response.put("endRow", 1);
-			response.put("startRow", 0);
-			response.put("status", 0);
-			response.put("data", jsonArray);
-
-			jsonBuilder.generateResponse(response);
-
-			respuesta = jsonBuilder.getRespuesta();
+			response = JSONGenerator.getSaveResponse(userMapper.selectByCodUser(user.getCodUser()));
 		}
 		catch (Exception ex)
 		{
 			ex.printStackTrace();
+
+			response = JSONGenerator.getErrorResponse();
 		}
 
-		return respuesta;
+		return response;
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	@Transactional(readOnly = true)
 	public String fetchUsers(String json)
 	{
-		String respuesta = "";
+		String response;
 
 		try
 		{
-			List<User> usuarios = userMapper.selectAll();
-
-			JSONObject respuestaJSON = new JSONObject();
-
-			JSONObject response = new JSONObject();
-
-			JSONArray jsonArray = new JSONArray();
-
-			for (User user : usuarios)
-				jsonArray.add(jsonBuilder.generateJson(user));
-
-			response.put("totalRows", usuarios.size());
-			response.put("endRow", usuarios.size());
-			response.put("startRow", 0);
-			response.put("status", 0);
-			response.put("data", jsonArray);
-
-			respuestaJSON.put("response", response);
-
-			respuesta = respuestaJSON.toString();
-
+			List<User> users = new ArrayList<User>();
+			users = userMapper.selectAll();
+			response = JSONGenerator.getResponse(users);
 		}
 		catch (Exception ex)
-
 		{
 			ex.printStackTrace();
+			response = JSONGenerator.getErrorResponse();
 		}
 
-		return respuesta;
+		return response;
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	@Transactional
 	public String removeUsers(String json)
 	{
-		String respuesta = "";
+		String response;
 
-		JSONObject jsonObject;
-		
 		try
 		{
-			jsonObject = (JSONObject) new JSONParser().parse(json);
+			JSONObject jsonObject = (JSONObject) new JSONParser().parse(json);
 
 			Long codUser = Long.parseLong(jsonObject.get("codUser").toString());
 
 			userMapper.deleteByPrimaryKey(codUser);
-			
-			JSONObject jsoObject = new JSONObject();
-			
-			jsonObject.put("status", 0);
-			
-			jsonBuilder.generateResponse(jsoObject);
+
+			response = JSONGenerator.getRemoveResponse();
 		}
-		catch (ParseException e)
+		catch (Exception ex)
 		{
-			e.printStackTrace();
+			ex.printStackTrace();
+			response = JSONGenerator.getErrorResponse();
 		}
 
-		return respuesta;
+		return response;
 	}
 }
