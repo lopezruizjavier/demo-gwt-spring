@@ -6,9 +6,11 @@ import java.util.List;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 import org.planificando.server.dao.UserMapper;
 import org.planificando.server.model.User;
 import org.planificando.server.service.UserService;
+import org.planificando.server.utils.JsonBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,6 +20,8 @@ public class UserServiceImpl implements UserService
 {
 	@Autowired
 	private UserMapper userMapper;
+
+	private JsonBuilder jsonBuilder = new JsonBuilder();
 
 	@SuppressWarnings({ "unchecked" })
 	@Override
@@ -50,9 +54,11 @@ public class UserServiceImpl implements UserService
 			if (user.getCodUser() == null)
 				userMapper.insert(user);
 			else
+			{
 				userMapper.update(user);
 
-			JSONObject respuestaJSON = new JSONObject();
+				user = userMapper.selectByCodUser(user.getCodUser());
+			}
 
 			JSONObject response = new JSONObject();
 
@@ -68,9 +74,9 @@ public class UserServiceImpl implements UserService
 			response.put("status", 0);
 			response.put("data", jsonArray);
 
-			respuestaJSON.put("response", response);
+			jsonBuilder.generateResponse(response);
 
-			respuesta = respuestaJSON.toString();
+			respuesta = jsonBuilder.getRespuesta();
 		}
 		catch (Exception ex)
 		{
@@ -98,19 +104,10 @@ public class UserServiceImpl implements UserService
 			JSONArray jsonArray = new JSONArray();
 
 			for (User user : usuarios)
-			{
-				JSONObject jsonUser = new JSONObject();
+				jsonArray.add(jsonBuilder.generateJson(user));
 
-				jsonUser.put("codUser", user.getCodUser());
-				jsonUser.put("nick", user.getNick());
-				jsonUser.put("pass", user.getPass());
-				jsonUser.put("email", user.getEmail());
-
-				jsonArray.add(jsonUser);
-			}
-
-			response.put("totalRows", 1);
-			response.put("endRow", 1);
+			response.put("totalRows", usuarios.size());
+			response.put("endRow", usuarios.size());
 			response.put("startRow", 0);
 			response.put("status", 0);
 			response.put("data", jsonArray);
@@ -129,11 +126,34 @@ public class UserServiceImpl implements UserService
 		return respuesta;
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	@Transactional
 	public String removeUsers(String json)
 	{
-		// TODO Auto-generated method stub
-		return null;
+		String respuesta = "";
+
+		JSONObject jsonObject;
+		
+		try
+		{
+			jsonObject = (JSONObject) new JSONParser().parse(json);
+
+			Long codUser = Long.parseLong(jsonObject.get("codUser").toString());
+
+			userMapper.deleteByPrimaryKey(codUser);
+			
+			JSONObject jsoObject = new JSONObject();
+			
+			jsonObject.put("status", 0);
+			
+			jsonBuilder.generateResponse(jsoObject);
+		}
+		catch (ParseException e)
+		{
+			e.printStackTrace();
+		}
+
+		return respuesta;
 	}
 }

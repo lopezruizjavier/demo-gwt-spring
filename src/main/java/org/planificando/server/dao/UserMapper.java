@@ -13,4 +13,6 @@ public interface UserMapper
 	public int update(User user);
 
 	public List<User> selectAll();
+	
+	public User selectByCodUser(Long codUser);
 }

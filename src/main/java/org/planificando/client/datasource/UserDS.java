@@ -38,11 +38,15 @@ public class UserDS extends JSONRestDataSource
 		registered.setCanEdit(false);
 		pass.setCanEdit(true);
 		nick.setCanEdit(true);
-		
+		email.setCanEdit(true);
+		username.setCanEdit(true);
+		banned.setCanEdit(true);
+		surname.setCanEdit(true);
+
 		setFetchDataURL(FETCH_URL);
 		setAddDataURL(SAVE_URL);
 		setRemoveDataURL(REMOVE_URL);
 		setUpdateDataURL(SAVE_URL);
-		setFields(nick, pass, email, banned, registered, username, surname);
+		setFields(codUser, nick, pass, email, banned, registered, username, surname);
 	}
 }
