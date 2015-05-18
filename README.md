@@ -7,7 +7,7 @@ HOW TO GET THE PROJECT:
 HOW TO UPDATE MY REPO FROM THE ORIGINAL REPO
 
 1. git remote add upstream https://github.com/lopezruizjavier/demo-gwt-spring.git
-2. git pull upstream
+2. git pull upstream master
 
 CARE IF YOU HAVE ALREADY MADE CHANGES TO YOUR LOCAL REPO!!
 
