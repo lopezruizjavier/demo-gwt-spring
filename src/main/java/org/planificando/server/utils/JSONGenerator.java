@@ -60,6 +60,22 @@ public class JSONGenerator
 	}
 
 	@SuppressWarnings("unchecked")
+	public static String getValidationErrorResponse(String field, String error)
+	{
+		JSONObject respuesta = new JSONObject();
+		JSONObject response = new JSONObject();
+		JSONObject errors = new JSONObject();
+
+		errors.put(field, error);
+
+		response.put("errors", errors);
+		response.put("status", -4);
+		respuesta.put("response", response);
+
+		return respuesta.toString();
+	}
+
+	@SuppressWarnings("unchecked")
 	public static String getErrorResponse()
 	{
 		JSONObject respuesta = new JSONObject();

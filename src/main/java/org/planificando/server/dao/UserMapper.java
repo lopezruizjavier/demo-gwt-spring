@@ -15,4 +15,6 @@ public interface UserMapper
 	public List<User> selectAll();
 	
 	public User selectByCodUser(Long codUser);
+	
+	public User selectByNick(String nick);
 }

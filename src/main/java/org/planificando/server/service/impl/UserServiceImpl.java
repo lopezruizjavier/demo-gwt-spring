@@ -59,16 +59,23 @@ public class UserServiceImpl implements UserService
 			if (jsonObject.get("banned") != null)
 				user.setBanned(Boolean.parseBoolean(jsonObject.get("banned").toString()));
 
-			if (user.getCodUser() == null)
+			User duplicate = userMapper.selectByNick(user.getNick());
+
+			if (duplicate == null || duplicate.getCodUser().equals(user.getCodUser()))
 			{
-				user.setRegistered(new Date());
-				user.setBanned(false);
-				userMapper.insert(user);
+				if (user.getCodUser() == null)
+				{
+					user.setRegistered(new Date());
+					
+					userMapper.insert(user);
+				}
+				else
+					userMapper.update(user);
+
+				response = JSONGenerator.getSaveResponse(userMapper.selectByCodUser(user.getCodUser()));
 			}
 			else
-				userMapper.update(user);
-
-			response = JSONGenerator.getSaveResponse(userMapper.selectByCodUser(user.getCodUser()));
+				response = JSONGenerator.getValidationErrorResponse("nick", "Nick is already taken.");
 		}
 		catch (Exception ex)
 		{

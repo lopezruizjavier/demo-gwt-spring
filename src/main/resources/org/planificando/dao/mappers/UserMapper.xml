@@ -20,6 +20,10 @@
 		SELECT * FROM "USER"
 	</select>
 	
+	<select id="selectByNick" resultMap="BaseResultMap" parameterType="string">
+		SELECT * FROM "USER" WHERE nick = #{nick, jdbcType=VARCHAR}
+	</select>
+	
 	<select id="selectByCodUser" resultMap="BaseResultMap" parameterType="long">
 		SELECT * FROM "USER" WHERE cod_user = #{codUser, jdbcType=BIGINT}
 	</select>
@@ -58,7 +62,7 @@
 				email = #{email, jdbcType=VARCHAR},
 			</if>
 			<if test="banned != null">
-				banned = #{banned, jdbcType=VARCHAR},
+				banned = #{banned, jdbcType=BOOLEAN},
 			</if>
 			<if test="registered != null">
 				registered = #{registered, jdbcType=VARCHAR},
