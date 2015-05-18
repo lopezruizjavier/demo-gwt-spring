@@ -31,4 +31,4 @@ mvn install:install-file -Dfile=C:\Users\Javier\smartgwt.jar -DgroupId=com.smart
     -DartifactId=smartgwt -Dversion=5.0 -Dpackaging=jar -DlocalRepositoryPath=C:\Users\Javier\.m2\repository
     
 mvn install:install-file -Dfile=C:\Users\Javier\smartgwt-skins.jar -DgroupId=com.smartgwt 
-    -DartifactId=smartgw-skinst -Dversion=5.0 -Dpackaging=jar -DlocalRepositoryPath=C:\Users\Javier\.m2\repository
+    -DartifactId=smartgw-skins -Dversion=5.0 -Dpackaging=jar -DlocalRepositoryPath=C:\Users\Javier\.m2\repository
